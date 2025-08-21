@@ -1,0 +1,675 @@
+\documentclass{article}
+
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{graphicx}
+\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\usepackage{bm}
+\usepackage{extarrows}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{braket}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{pifont}
+
+%\setcounter{MaxMatrixCols}{14}
+
+\title{Simple Mathematical Analysis}
+\author{路致远}
+
+\newtheorem{definition}{定义}
+\newtheorem{example}{例}
+\newtheorem{theorem}{命题}
+\newtheorem{lemma}{引理}
+\newtheorem{question}{问题}
+\newtheorem{answer}{解}[section]
+\renewcommand{\theanswer}{}
+\newtheorem{analysis}{分析}[section]
+\renewcommand{\theanalysis}{}
+
+\begin{document}
+\maketitle
+%“？”——艾颖华
+\section{收敛性}
+“收敛性就是可交换。”——艾颖华
+\subsection{数项级数的敛散性}
+\subsubsection{交换与结合}
+收敛即是和数列的极限存在。调整求和顺序会很大地影响和数列，因此，一般地不能交换求和顺序。特别地，有黎曼重排定理；\\
+\begin{theorem}[黎曼重排]
+    对收敛级数$\sum \limits_{n=0}^{\infty} a_n$，有：\\
+    (1)若绝对收敛，则交换求和顺序$n \rightarrow \gamma(n)$，新级数收敛且$\sum \limits_{n=0}^{\infty} a_n = \sum \limits_{n=0}^{\infty} a_{\gamma(n)}$\\
+    (2)若条件收敛，则$\forall \xi \in \mathbb{R},\exists \gamma(n),s.t. \xi = \sum \limits_{n=0}^{\infty} a_{\gamma(n)}$
+\end{theorem}
+最典型的例子就是$ln(2)$的级数。
+\begin{example}
+    由泰勒级数知道
+    $$ln(2) = 1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \cdots = \sum \limits_{n=1}^{\infty} \frac{(-1)^{n-1}}{n}$$
+    做如下的重排
+    $$S = 1 - \frac{1}{2} - \frac{1}{4} + \frac{1}{3} - \frac{1}{6} - \frac{1}{8} + \cdots$$
+    考虑部分和$S_m$，当$m$是3的倍数时，有
+    $$S_{3k}= \sum \limits_{n=1}^{k} [\frac{1}{2n-1} - \frac{1}{4n-2} - \frac{1}{4n}] = \frac{1}{2} \sum \limits_{n=1}^{k} [\frac{1}{2n-1} - \frac{1}{2n}] = \frac{1}{2} [1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \cdots] = \frac{1}{2} ln(2)$$
+    而当$m$并非3的倍数时，差异$o \sim \frac{1}{n}$，因此重排后的S
+    $$S = \frac{1}{2} ln(2)$$
+\end{example}
+由此知道，绝对收敛意味着求和顺序可以交换。
+然而，立刻就会想到，如果不是交换求和顺序，而是像我们之前的计算那样，对求和进行结合，这是可行的吗？一般而言，这是不行的。例如$1-1+1-1+\cdots$是显然不收敛的，但是$(1-1)+(1-1)+\cdots$却是收敛的。
+\begin{theorem}
+    若级数$\sum a_n$收敛，则由$a_n$所结合成的$A_l = \sum \limits_{n = n_{l-1}+1}^{n_l} a_n$所组成的级数$\sum A_l$也收敛，且
+    $$\sum a_n = \sum A_l$$
+\end{theorem}
+\begin{analysis}
+    这是一个很简单的证明，只要你从部分和序列的角度来看，结合的影响不过是抽出原部分和序列的一个子列而已。
+\end{analysis}
+\begin{proof}
+    原级数部分和
+    $$S_m = \sum \limits_{n=0}^{m} a_n$$
+    由于原级数收敛，数列$\{ S_m \}_{m=0}^{\infty}$收敛。\\
+    而结合级数部分和
+    $$S_k = \sum \limits_{l=0}^{k} A_l = \sum \limits_{n=0}^{n_k} a_n = S_{n_k}$$
+    所以数列$\{ S_k \}_{k=0}^{\infty}$是$\{ S_m \}_{m=0}^{\infty}$之子列。由于原数列收敛，其子列也一定收敛，且有相同的极限。
+\end{proof}
+因此，在例1中，我们应当先证明级数收敛，再进行计算。但一旦我们研究具体的级数，和函数往往极难显式地写出，更何谈极限。因此，我们需要审敛法。
+\subsubsection{一般审敛}
+既然是要考虑的是完备空间上的和数列极限，只要是和数列是Cauchy列就可以了，即足够多项的和差异很小。
+\begin{theorem}[Cauchy充要审敛]
+    级数$\sum a_n$收敛，当且仅当$$\forall \epsilon > 0, \exists N ,s.t.\forall m \geq n>N, |a_n + \cdots + a_m| < \epsilon$$    
+\end{theorem}
+Cauchy审敛往往用于理论性的证明，对付具体计算并不好用。但是，在一些非交错、非正项的级数中，或是证明级数发散时，Cauchy审敛由于其充分必要性，将是我们除了定义外唯一的工具。
+\begin{question}
+    证明：例1中重排后的级数收敛。
+\end{question}
+\begin{proof}
+    $\because \sum \limits_{n=1}^{\infty} \frac{(-1)^{n-1}}{n}$收敛；
+    $$\therefore \forall \epsilon>0, \exists N_0, s.t. \forall m \geq n > N_0, |\frac{(-1)^{n-1}}{n} + \cdots +\frac{(-1)^{m-1}}{m}| < \epsilon$$
+    考虑例1中级数的部分和差异
+    $$|S_p - S_q| = |F + [\frac{1}{2l-1} - \frac{1}{4l-2} - \frac{1}{4l}] + \cdots + [\frac{1}{2r-1} - \frac{1}{4r-2} - \frac{1}{4r}] + E|$$
+    F,E是由于p，q非3整数倍引起的残项，有
+    $$|F| \leq \frac{1}{2n-1}, |E| \leq \frac{1}{2n-1}$$
+    $$\therefore \forall \epsilon>0, \exists N = max[N_0, [\frac{2}{\epsilon}+\frac{1}{2}]],s.t.\forall p,q>N ,|S_p - S_q| < \frac{1}{2}\epsilon + \frac{2}{2N-1} <\epsilon$$
+    从而收敛。
+\end{proof}
+对于交错级数，则可用莱布尼兹审敛，但这并非必要条件。
+\begin{theorem}[Leibniz审敛]
+    对于级数$\sum (-1)^n u_n$，若$\lim_{n\rightarrow\infty}u_n=0$，且$\{u_n\}$单调递减，则级数收敛。
+\end{theorem}
+除此之外，利用Abel变换，还可以给出两个收敛的充分条件
+\begin{theorem}[Abel审敛]
+    若级数$\sum a_n$收敛，且$\{b_n\}$单调有界，则级数$\sum a_n b_n$收敛。
+\end{theorem}
+\begin{theorem}[Dirichlet审敛]
+    若部分和$\sum \limits_{n=0}^{m} a_n$有界，且$\{b_n\}$单调趋0，则级数$\sum a_n b_n$收敛。
+\end{theorem}
+运用这两个审敛法的关键是正确地分割级数。
+\subsubsection{正项审敛}
+由于单调有界必有极限，我们对绝对收敛，或说正项级数的审敛法尤其多。
+最为常用的就是比值审敛和根式审敛法，这里从略；此外，比较审敛也是非常常见的。
+\begin{theorem}[比较审敛法]
+    若正项级数$\sum b_n$收敛，且$\exists N, s.t. \forall n>N, 0 \leq a_n \leq b_n$，则级数$\sum a_n$收敛。
+\end{theorem}
+\begin{theorem}[极限比较审敛法]
+    若$\sum b_n,\sum a_n$都是正项级数，且\\
+    (1)$\lim_{n\rightarrow\infty} \frac{a_n}{b_n} = l \in (0,\infty)$，则$\sum b_n,\sum a_n$同敛散。\\
+    (2)若$l=0$，则若$\sum b_n$收敛，则$\sum a_n$收敛。\\
+    (3)若$l\rightarrow\infty$，则若$\sum a_n$收敛，则$\sum b_n$收敛。
+\end{theorem}
+敛散性熟知的级数可以用于比较审敛。例如等比级数$\sum r^n$，p级数$\sum \frac{1}{n^p}$，p对数级数$\sum \frac{1}{n ln(n)^p}$等等。
+同时，由极限比较审敛，还可以利用一些熟知的极限来判断收敛性。
+
+\begin{question}
+    级数$\sum \limits_{n=1}^{\infty} exp[-\sum \limits_{m=1}^{n} \frac{1}{m!}]$的敛散性。
+\end{question}
+\begin{answer}
+    注意到(Taylor公式)
+    $$\lim_{n\rightarrow\infty} \frac{exp[\sum \limits_{m=1}^{n} \frac{1}{m!}]}{1} = e^{e-1}$$
+    $$\therefore \sum \limits_{n=1}^{\infty} exp[-\sum \limits_{m=1}^{n} \frac{1}{m!}] \text{发散.}$$
+\end{answer}
+\begin{question}
+    级数$\sum \limits_{n=1}^{\infty} exp[-\sum \limits_{m=1}^{n} \frac{1}{m}]$的敛散性。
+\end{question}
+\begin{answer}
+    注意到(Euler常数)
+    $$\lim_{n\rightarrow\infty} \frac{exp[\sum \limits_{m=1}^{n} \frac{1}{m}]}{n} = exp[\lim_{n\rightarrow\infty} [\sum \limits_{m=1}^{n} \frac{1}{m} - ln(n)]] = e^{\gamma}$$
+    $$\therefore \sum \limits_{n=1}^{\infty} exp[-\sum \limits_{m=1}^{n} \frac{1}{m}] \text{发散.}$$
+\end{answer}
+类似地，
+\begin{question}
+    级数$\sum \limits_{n=1}^{\infty} \frac{1}{\sqrt[n]{n!}}$的敛散性。
+\end{question}
+\begin{answer}
+    $$\because \lim_{n\rightarrow\infty} \frac{n}{\sqrt[n]{n!}} = e$$
+    $$\therefore \sum \limits_{n=1}^{\infty} \frac{1}{\sqrt[n]{n!}}\text{发散.}$$
+\end{answer}
+事实上这个级数比调和级数发散得快，不是很需要使用极限判别法，但这是一个很重要的极限，因为其涉及到阶乘的估计。Stirling公式推导中就利用了这个估计。
+\subsubsection{积分审敛}
+先复习如何证明极限$$\lim_{n\rightarrow\infty} \frac{n}{\sqrt[n]{n!}} = e$$
+\begin{proof}
+    考虑
+    $$ln(n!) = \sum \limits_{m=1}^{n} ln(m)$$
+    由于ln(x)是单增的连续函数，有
+    $$\int_{1}^{n} ln(x) dx \leq \sum \limits_{m=1}^{n} ln(m) = ln(n!) \leq \int_{1}^{n+1} ln(x) dx$$
+    积分，得
+    $$nln(n)-n+1 \leq ln(n!) \leq (n+1)ln(n+1)-n$$
+    $$\frac{e^{n-1}}{n} \leq \frac{n^n}{n!} \leq e^{n-1}$$
+    由夹逼定理$$\lim_{n\rightarrow\infty} \frac{n}{\sqrt[n]{n!}} = e$$
+\end{proof}
+这充分体现了积分审敛的原理，即把级数的部分和与一个积分作比较，利用定积分的收敛性来研究数列的收敛性。在使用时，往往省略中间的分析过程，直接把级数收敛性与积分收敛性等同起来。下面是一个常见的例子
+\begin{theorem}
+    级数$\sum \limits_{n=2}^{\infty} \frac{1}{n ln(n)^p}(p>0)$在$p \leq 1$时发散,$p>1$时收敛。
+\end{theorem}
+\begin{proof}
+    由于函数$\frac{1}{nln(n)^p}$单调减少；
+    考虑积分
+    $$\int_{x=2}^{\infty} \frac{1}{xln(x)^p} dx = \int_{x=2}^{\infty} \frac{1}{ln(x)^p} dln(x)$$
+    在$p \leq 1$时发散,$p>1$时收敛。
+\end{proof}
+之前对阶乘的估计是十分紧的，他可以替代大多数Stirling公式。
+\begin{theorem}
+    级数$\sum \limits_{n=0}^{\infty} \frac{n!e^n}{n^n}$是发散的。
+\end{theorem}
+\begin{proof}
+    由之前估计，$\frac{n!e^n}{n^n} \geq e$，从而级数发散。    
+\end{proof}
+但是也有无法替代的情况，比如连考了3年的这个题
+\begin{question}
+    级数$\sum \limits_{n=0}^{\infty} \frac{(n!)^2 4^n}{(2n)!}$的收敛性；
+\end{question}
+\begin{analysis}
+    本题如果你将之前的积分估计带入，则会发现这个放缩总是过宽了(大于一个收敛级数，小于一个发散级数)，因此，需要使用Stirling了。\\
+    Stirling公式：
+    $$\lim_{n\rightarrow\infty} \frac{n!} {\sqrt{2 \pi n} (\frac{n}{e})^n } = 1$$
+\end{analysis}
+\begin{answer}
+    由Stirling公式
+    $$\lim_{n\rightarrow\infty} \frac{(n!)^2 4^n}{(2n)!} \frac{2 \sqrt{\pi n} (\frac{2n}{e})^{2n}}{2 \pi n (\frac{n}{e})^{2n} 4^n } = \frac{(n!)^2 4^n}{(2n)!} \frac{1}{\sqrt{\pi n}} = 1$$
+    而级数$\sum \limits_{n=0} \sqrt{\pi n}$显然发散，所以原级数发散。
+\end{answer}
+但是非斯特林不可吗？并非，你只需仔细地观察前后项的比，就会发现：
+$$\frac{a_{n+1}}{a_n} = \frac{2n+2}{2n+1} > 1$$
+这是一个正项递增的级数，怎么可能会收敛？我们应当反思，极限形式固然大多数时候有利于简化计算，但在某些时候它会掩盖某些信息，蒙蔽我们的双眼。
+\subsection{函数项级数}
+如果不止由一个和数列，而有很多和数列，而且有一个映射，将一个实数映射为一个和数列，我们就得到了和函数项数列，而由实数到数列的每一项的映射，即是级数的函数项。
+对于某些实数，和数列是收敛的，这些点的集合即是收敛域。
+\subsubsection{一致收敛性}
+对函数项级数，如果在某一个域上，收敛与自变量无关，则是一致收敛的。准确的定义复述如下：
+\begin{definition}
+    函数项级数$\sum u_n(x)$于$I \subset \mathbb{R}$一致收敛，假若
+    $$\forall \epsilon>0,\ \exists N \text{与x无关, 使得部分和函数}S_n(x)\text{满足}\ \forall n>N\  |S_n(x) - U(x)| < \epsilon\ \ \forall x \in I  $$
+\end{definition}
+依据这个定义，我们可以移植数项级数中的各种审敛法，只需要在恰当的位置加上一致性即可。
+\begin{theorem}
+    (Cauchy充要审敛)
+    级数$\sum u_n$一致收敛于$I$，当且仅当$$\forall \epsilon > 0, \exists N \text{与x无关} ,s.t.\forall m \geq n>N, |u(x)_n + \cdots + u(x)_m| < \epsilon\ \ \forall x \in I$$    
+\end{theorem}
+证明级数并非一致收敛时，往往用反证法，用Cauchy充要条件或是定义推出矛盾。
+\begin{theorem}
+    级数$\sum \limits_{n=0}^{\infty} x^n$于$I = [0,1)$不一致收敛。
+\end{theorem}
+\begin{proof}
+    部分和函数$S_n(x) = \frac{1-x^n}{1-x}$，从而级数于[0,1)上逐点地收敛于$S(x) = \frac{1}{1-x}$\\
+    用反证法，假设级数一致收敛，由Cauchy充要条件，令$m=n$，有
+    $$\forall \epsilon > 0, \exists N \text{与x无关} ,s.t.\forall n>N, |x^n| < \epsilon\ \ \forall x \in I,\ \text{即对于一个固定的} n,\ |x^n| < \epsilon$$
+    $$\therefore \lim_{x\rightarrow1}\ |x^n| = 1 \leq \epsilon$$
+    矛盾！
+\end{proof}
+\begin{theorem}
+    级数$x + (x^2-x) + (x^3-x^2) + \cdots$于$I = [0,1)$不一致收敛。
+\end{theorem}
+\begin{proof}
+    部分和函数$S_n(x) = x^n$，从而级数于[0,1)上逐点地收敛于$S(x) = 0$\\
+    用反证法，假设级数一致收敛，由定义
+    $$\forall \epsilon > 0, \exists N \text{与x无关} ,s.t.\forall n>N, |x^n| < \epsilon\ \ \forall x \in I,\ \text{即对于一个固定的} n,\ |x^n| < \epsilon$$
+    $$\therefore \lim_{x\rightarrow1}\ |x^n| = 1 \leq \epsilon$$
+    矛盾！
+\end{proof}
+从中，一个重大误区得以排除，即将逐点收敛与一致收敛混为一谈。一下是另外两个一般的审敛方法
+\begin{theorem}[Abel审敛]
+    若级数$\sum a_n(x)$一致收敛，且$\{b_n(x)\}$单调一致有界，则级数$\sum a_n(x) b_n(x)$一致收敛。
+\end{theorem}
+\begin{theorem}[Dirichlet审敛]
+    若部分和函数$\sum \limits_{n=0}^{m} a_n(x)$一致有界，且$\{b_n(x)\}$单调一致趋0，则级数$\sum a_n(x) b_n(x)$一致收敛。
+\end{theorem}
+对以上，第二次作业中的题目的各个题目都是很好的练习。\\
+移植后的比值审敛和根式审敛分别给出一种计算收敛半径的方法，在此从略。\\
+即使如此，这个一致收敛定义的图像并不清晰，相对令人困惑。为了更好地理解一致收敛性，引入一致收敛度量，即Chebyshev度量。
+\subsubsection{Chebyshev度量}
+函数项级数本质上还是和函数列的极限，就是和函数“很接近”某个唯一确定的函数。究竟有多“接近”？为此，引入Chebyshev度量。
+\begin{definition}[Chebyshev度量]
+    对定义在$I \subseteq \mathbb{R}$的函数$f(x), g(x)$，其Chebyshev距离为
+    $$d_{Chebyshev} = sup_{x \in I}|f(x) - g(x)|$$
+\end{definition}
+容易验证，其满足正定性、交换性和三角不等式。由此定义好了函数间的距离，就可以写出一个等价的一致连续定义。
+\begin{definition}
+    函数项级数$\sum u_n(x)$于$I \subset \mathbb{R}$一致收敛，假若
+    $$\forall \epsilon>0,\ \exists N \text{与x无关, 使得部分和函数}S_n(x)\text{满足}\ \forall n>N,\  d[S_n(x) , U(x)] < \epsilon $$
+\end{definition}
+从函数列极限角度去理解，一致收敛的很多性质几乎是显然的：\\
+(1)一致收敛不等价于逐点收敛。如图所示，即使逐点收敛，因为上确界未必在集合内，两个函数间依然可以有有限的距离。\\
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{图c.1.jpg} 
+\end{figure}
+(2)Weierstrass强级数审敛：如图所示，它利用常数数项级数控制了和函数与部分和函数之间的距离。
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{图c.2.jpg} 
+\end{figure}
+但是，这个图像不能代替以下的严谨叙述和证明。
+\begin{theorem}[Weierstrass M-test]
+    设 $\{f_n(x)\}$ 是定义在集合 $D$ 上的一列函数，且存在一列正数 $\{M_n\}$，使得对于所有 $x \in D$ 和所有 $n \in \mathbb{N}$，有
+    \begin{equation}
+    |f_n(x)| \leq M_n.
+    \end{equation}
+    如果级数
+    \begin{equation}
+    \sum_{n=1}^{\infty} M_n
+    \end{equation}
+    收敛，则级数
+    \begin{equation}
+    \sum_{n=1}^{\infty} f_n(x)
+    \end{equation}
+    在 $D$ 上一致收敛。
+\end{theorem}
+\begin{proof}
+    假设级数 $\sum_{n=1}^{\infty} M_n$ 收敛。根据柯西收敛准则，对于任意 $\epsilon > 0$，存在正整数 $N$，使得对于所有 $m > n \geq N$，有
+    \begin{equation}
+    \sum_{k=n+1}^{m} M_k < \epsilon.
+    \end{equation}
+    由于对于所有 $x \in D$，有 $|f_k(x)| \leq M_k$，因此
+    \begin{equation}
+    \left| \sum_{k=n+1}^{m} f_k(x) \right| \leq \sum_{k=n+1}^{m} |f_k(x)| \leq \sum_{k=n+1}^{m} M_k < \epsilon.
+    \end{equation}
+    这表明级数 $\sum_{n=1}^{\infty} f_n(x)$ 在 $D$ 上满足柯西一致收敛准则，因此一致收敛。
+\end{proof}
+(3)一致收敛性造成的可交换：如图所示，由于两个函数十分接近，应当允许其极限、积分和导数都十分接近。\\
+\begin{figure}[H]
+\centering 
+\includegraphics[width=0.5\textwidth]{图c.3.jpg} 
+\end{figure}
+再次重申，以上图像不可以代替严格的数学叙述和证明。
+\begin{theorem}[求和与极限的可交换]
+    设 $\{f_n(x)\}$ 是定义在集合 $D$ 上的一列函数，如果级数 $\sum_{n=1}^{\infty} f_n(x)$ 在 $D$ 上一致收敛，且$\lim_{x\rightarrow a}f_n(x)$都存在，则
+    \begin{equation}
+    \lim_{x \to a} \sum_{n=1}^{\infty} f_n(x) = \sum_{n=1}^{\infty} \lim_{x \to a} f_n(x),
+    \end{equation}
+\end{theorem}
+    
+\begin{theorem}[求和与导数的可交换]
+    设 $\{f_n(x)\}$ 是定义在区间 $I$ 上的一列可导函数，且对于每个 $x \in I$，级数 $\sum_{n=1}^{\infty} f_n(x)$ 和 $\sum_{n=1}^{\infty} f_n'(x)$ 都收敛。如果级数 $\sum_{n=1}^{\infty} f_n'(x)$ 在 $I$ 上一致收敛，则
+    \begin{equation}
+    \left( \sum_{n=1}^{\infty} f_n(x) \right)' = \sum_{n=1}^{\infty} f_n'(x).
+    \end{equation}
+\end{theorem}
+    
+\begin{theorem}[求和与积分的可交换]
+    设 $\{f_n(x)\}$ 是定义在区间 $[a, b]$ 上的一列连续函数，且对于每个 $x \in [a, b]$，级数 $\sum_{n=1}^{\infty} f_n(x)$ 收敛。如果级数 $\sum_{n=1}^{\infty} f_n(x)$ 在 $[a, b]$ 上一致收敛，则
+    \begin{equation}
+    \int_a^b \sum_{n=1}^{\infty} f_n(x) \, dx = \sum_{n=1}^{\infty} \int_a^b f_n(x) \, dx.
+    \end{equation}
+\end{theorem}    
+\ \\
+由于一致连续性具有以上良好性质，其经常用于各种计算之中。
+\subsubsection{和函数的计算}
+一个简单的例子，但是却包含了所有常见的计算技巧：
+\begin{question}
+求级数$\sum_{n=2}^{\infty} \frac{1}{2^n(n^2-1)}$的和.
+\end{question}
+\begin{answer}
+    $$\because \frac{1}{2^n(n^2-1)} < \frac{1}{2^n},\ \therefore \sum_{n=2}^{\infty} \frac{1}{2^n(n^2-1)}\text{收敛(交换顺序的前提条件)}$$
+    $$\therefore \sum_{n=2}^{\infty} \frac{1}{2^n(n^2-1)} = \sum_{n=2}^{\infty} \frac{1}{2^{n+1}(n-1)} - \sum_{n=2}^{\infty} \frac{1}{2^{n+1}(n+1)} = \frac{5}{32} - \frac{3}{4}\sum_{n=3}^{\infty} \frac{1}{n 2^n}$$
+    注意到
+    $$\int_{x}^{\infty} \frac{1}{t^{n+1}} dt = \frac{1}{n x^n}$$
+    而考虑级数$\sum_{n=3}^{\infty} u_n(t) = \sum_{n=3}^{\infty} \frac{1}{t^{n+1}}$于$[1.5,2.5]$上一致收敛，因为
+    $$\exists M_n = (\frac{2}{3})^{n+1} \geq u_n(x),\ \text{且} \sum_{n=3}^{\infty} M_n\text{收敛}$$
+    $$\therefore \sum_{n=3}^{\infty} \frac{1}{n 2^n} = \sum_{n=3}^{\infty} \int_{2}^{\infty} \frac{1}{t^{n+1}} dt = \int_{2}^{\infty} [\sum_{n=3}^{\infty} \frac{1}{t^{n+1}}] dt = ln(2) - \frac{5}{8}$$
+    $$\therefore \sum_{n=2}^{\infty} \frac{1}{2^n(n^2-1)} = \frac{5}{32} - \frac{3}{4}\sum_{n=3}^{\infty} \frac{1}{n 2^n} = \frac{5}{8} - \frac{3}{4}ln(2)$$
+    即为所求.
+\end{answer}
+2023年的5.题更加精彩，还包括了通过改变零测集上的函数值，利用变限积分换元等技巧。
+\begin{question}
+    记 \( f(x) = \sum_{n=1}^{\infty} x^n \ln x \). 证明:
+\[
+\int_{0}^{1} f(x) \, dx = 1 - \sum_{n=1}^{\infty} \frac{1}{n^2}.
+\]
+\end{question}
+\begin{proof}
+    注意到该级数在(0,1)上内闭一致收敛，且可以直接算出
+    $$f(x) = \sum_{n=1}^{\infty} x^n \ln x = \frac{x}{1-x} ln(x),\ \ \forall x \in [a,b],\ 0<a \leq b<1$$
+    注意到以下两个极限
+    $$\lim_{x \to 0} f(x) = 0,\ \ \lim_{x \to 1} f(x) = -1$$
+    积分的困难主要集中在两个端点附近，我们试图对函数在两个端点的值进行替换。首先考虑将端点1纳入计算(答案中则先将0纳入计算)。连续化，得到
+    %令函数项
+    %$$u_n(x) = 
+    %\left\{
+    %    \begin{array}{l}
+    %    -1\ \ for\ x = 1; \\
+    %    x^n ln(x)\ \ for\ x \in (0,a];
+    %    \end{array}
+    %\right.$$
+    $$\bar{f}(x) = 
+    \left\{
+        \begin{array}{l}
+            -1\ \ for\ x = 1; \\
+            \frac{x}{1-x} ln(x)\ \ for\ x \in [a,1);
+        \end{array}
+    \right.
+    $$
+    由于只改变了零测集的值，有
+    $$\int_{a}^{1} f(x) dx = \int_{a}^{1} \bar{f}(x) dx $$
+    考虑对对数函数的Taylor展开
+    $$ln(x) = ln(1-(1-x)) = - \sum_{n=1}^{\infty} \frac{(1-x)^n}{n}$$
+    该级数收敛半径为1，由于a<1，上式是成立的。且因为$\bar{f}(x)$是连续的，变上限积分函数$\phi(a)$也是连续的。
+    $$\therefore \phi(a) = \int_{a}^{1} \bar{f}(x) dx = \int_{a}^{1} \sum_{n=1}^{\infty} \frac{1-x}{1-x} \frac{(1-x)^n}{n} dx - \int_{a}^{1} \sum_{n=1}^{\infty} \frac{(1-x)^{n-1}}{n} dx $$
+    而这些级数是一致收敛的，这由Weierstrass强级数审敛所保证。
+    $$|\frac{(1-x)^n}{n}| \leq  \frac{(1-a)^n}{n},\ \ |\frac{(1-x)^{n-1}}{n}| \leq  \frac{(1-a)^{n-1}}{n}$$
+    这两个数项级数是收敛的，这由Dirichlet审敛所保证。
+    $$\therefore \phi(a) = \sum_{n=1}^{\infty} \int_{a}^{1} \frac{(1-x)^n}{n} dx - \sum_{n=1}^{\infty} \int_{a}^{1} \frac{(1-x)^{n-1}}{n} dx = \sum_{n=1}^{\infty} \frac{(1-a)^{n+1}}{n(n+1)} - \sum_{n=1}^{\infty} \frac{(1-a)^{n}}{n^2}$$
+    而在$[0.1,0]$上，后两个关于a的级数显然是一致收敛的，因为她们总是小于等于p=2的p级数。
+    $$\therefore \int_{0}^{1} f(x) dx = \lim_{a \to 0} \phi(a) = \sum_{n=1}^{\infty} \lim_{a \to 0} \frac{(1-a)^{n+1}}{n(n+1)} - \sum_{n=1}^{\infty} \lim_{a \to 0} \frac{(1-a)^{n}}{n^2} = 1 - \sum_{n=1}^{\infty} \frac{1}{n^2}$$
+\end{proof}
+证明的核心在于两次一致收敛的证明。这个证明利用幂级数的优良特性(积分易于计算、于收敛域内闭一致收敛)，相较答案有了一定简化。\\
+类似地技巧还有下面这个题，也用到了延拓的技巧。
+\begin{question}
+    求函数 \( f(x) = \int_0^x \frac{\sin t}{t} \, dt \) 的幂级数表示。
+\end{question}
+具体的计算过程就省略了。
+另外的一些计算技巧则是利用了一些序列的和。
+例如，关于Eular常数，有一个巧妙的证明。
+\begin{question}
+    证明：$\sum \limits_{n=1}^{\infty} \frac{(-1)^{n-1}}{n}$收敛于ln(2);
+\end{question}
+\begin{proof}
+    由Eular的结论：
+    $$1+\frac{1}{2}+\frac{1}{3}+ \cdots +\frac{1}{n}= ln(n) + \gamma + o(n)$$
+    $$\lim_{n\rightarrow\infty} o(n) = 0$$
+    令
+    $$P_n = \sum \limits_{m=1}^{n} \frac{1}{2m-1}$$
+    $$Q_n = \sum \limits_{m=1}^{n} \frac{1}{2m}$$
+    因此
+    $$P_n + Q_n = ln(2n) + \gamma + o_1(n)\ \  \cdots \cdots (1)$$
+    $$2Q_n = ln(n) + \gamma + o_2(n)\ \  \cdots \cdots (2)$$
+    (1)-(2)即有
+    $$P_n - Q_n = ln(2) + (o_1(n)-o_2(n))$$
+    $$\therefore \sum \limits_{n=1}^{\infty} \frac{(-1)^{n-1}}{n} = \lim_{n\rightarrow\infty}P_n - Q_n = ln(2)$$
+\end{proof}
+\subsubsection{Taylor展开的计算}
+\begin{question}
+    求函数$arcsin(x)$在0附近的展开.
+\end{question}
+\begin{answer}
+    注意到
+    $$\int \frac{1}{\sqrt{1-x^2}} dx = arcsin(x)$$
+    而由Taylor展开
+    $$\frac{1}{\sqrt{1-x^2}} = \sum_{n=0}^{\infty} \frac{(2n)!}{4^n (n!)^2} x^{2n}$$
+    收敛半径为1. 因此
+    $$\exists r < 1, \forall x \in [-r,r], u_n(x)= \frac{(2n)!}{4^n (n!)^2} x^{2n} \leq \frac{(2n)!}{4^n (n!)^2} r^{2n}$$
+    因此$\sum_{n=0}^{\infty} \frac{(2n)!}{4^n (n!)^2} x^{2n}$于$[-r,r]$一致收敛。
+    $$\therefore arcsin(x) = \int \sum_{n=0}^{\infty} \frac{(2n)!}{4^n (n!)^2} x^{2n} dx = \sum_{n=0}^{\infty} \int \frac{(2n)!}{4^n (n!)^2} x^{2n} dx = \sum_{n=0}^{\infty} \frac{(2n)!}{4^n (2n+1) (n!)^2} x^{2n+1}$$
+    即为所求。
+\end{answer}
+
+\section{微分学}
+“连续函数都是连续的，但有一些函数更加连续。”
+\subsection{连续、可微与解析}
+从之前的讨论中，可以隐约感受到所谓的连续性，就是指一个映射把“很接近的点”映射为“仍然很接近的点”的性质。为了量度“到底有多近”，度量拓扑就必须引入了。由此给出连续性的定义：
+\begin{definition}
+    设 $(X, \tau_X)$ 和 $(Y, \tau_Y)$ 是两个拓扑空间。函数 $f: X \to Y$ 是连续的，如果对于每一个开集 $V \in \tau_Y$，其原像 $f^{-1}(V)$ 是 $X$ 中的开集，即
+\[
+f^{-1}(V) \in \tau_X.
+\]
+\end{definition}
+或更简洁的:开集的原像是开集。
+但是，对于这样的连续性不能使得我们满意。我们希望对于某些“更连续”的函数，线性近似是好的。因此，可以引入可微性的概念。
+\begin{definition}[微分]
+    设 \( f: \mathbb{R}^n \to \mathbb{R}^m \) 在点 \( \mathbf{x}_0 \in \mathbb{R}^n \) 处可微，如果存在一个线性映射 \( L: \mathbb{R}^n \to \mathbb{R}^m \)，使得
+\[
+\lim_{\mathbf{h} \to \mathbf{0}} \frac{\| f(\mathbf{x}_0 + \mathbf{h}) - f(\mathbf{x}_0) - L(\mathbf{h}) \|}{\| \mathbf{h} \|} = 0.
+\]
+这个线性映射 \( L \) 称为 \( f \) 在 \( \mathbf{x}_0 \) 处的微分，记作 \( df(\mathbf{x}_0) \)。如果 \( f \) 在 \( \mathbf{x}_0 \) 处可微，则 \( L(\mathbf{h}) = J_f(\mathbf{x}_0) \mathbf{h} \)，其中 \( J_f(\mathbf{x}_0) \) 是 \( f \) 在 \( \mathbf{x}_0 \) 处的雅可比矩阵。
+\end{definition}
+不难得到可微的充分条件：
+\begin{theorem}
+    假若映射\( f: \mathbb{R}^n \to \mathbb{R}^m \)的各个分量\( f_k: \mathbb{R}^n \to \mathbb{R} \)于$\mathbf{x_0}$皆是$C^1$光滑的，则$f$于$\mathbf{x_0}$可微.
+\end{theorem}
+可微函数由于偏离线性函数不远，具有以下良好性质：
+\begin{theorem}
+    若函数\( f: \mathbb{R}^n \to \mathbb{R}\)于$\mathbf{x_0}$可微，则\\
+    (1)$f$于$\mathbf{x_0}$连续.\\
+    (2)$f$各个方向导数皆存在，且$\partial_{\vec{v}} f = \vec{v} \cdot \nabla f$
+\end{theorem}
+应当注意的是，这并非充要条件。即使f连续且$\partial_{\vec{v}} f = \vec{v} \cdot \nabla f$，也不能推出可微。可导和可微在多元函数中没有关系，毕竟他们本身描述的图像就不一样。譬如下面的例子。
+\begin{example}
+    二元函数$f(x,y): \mathbb{R}^2 \rightarrow \mathbb{R}$为
+    $$f(x,y) = 
+    \left\{
+        \begin{array}{l}
+            0\ \ for\ y = 0; \\
+            (1-cos[\frac{x^2}{y}])\sqrt{x^2 +y^2}\ \ for\ y \neq 0;
+        \end{array}
+    \right.
+    $$
+    其连续、可导，且$\partial_{\vec{v}} f = \vec{v} \cdot \nabla f$，但是并不可微。
+\end{example}
+\begin{proof}
+    由于$(x,y) \neq (0,0)$时，$r = \sqrt{x^2 + y^2} \neq 0$，修正成立
+    $$\lim_{(x,y) \to (0,0)} f(x,y) = \lim_{r \to 0} (1-cos[\frac{rcos(\theta)^2}{sin(\theta)}])r = 0 = f(0,0)$$
+    f(0,0)在(0,0)连续。并且，其各个方向导数也存在。不失一般性地，仅就模为1的方向向量证明。
+    $$\partial_{\vec{\theta}} f(x,y) = \lim_{r \to 0} \frac{(1-cos[\frac{rcos(\theta)^2}{sin(\theta)}])r - 0}{r} =  1-cos[0] = 0$$
+    并且
+    $$\nabla f(x,y)|_{(x,y)=(0,0)} = (0,0),\ \partial_{\vec{v}} = \vec{v} \cdot \nabla f(0,0)$$
+    但是，f(x,y)并不可微。考虑可导和可微的区别：可导只涉及直线路径，可微要求对任意路径都成立。对于这个例子，直线路径已经是对的，只能从曲线路径来考虑。
+    令路径为
+    $$p(t) = (t,t^2)$$
+    $$\therefore \lim_{t \to 0} \frac{f[p(t)] - f[p(0)] - \partial_xf \cdot t - \partial_yf \cdot t^2}{\sqrt{t^2 + t^4}} = \lim_{t \to 0} [1-cos(\frac{t^2}{t^2})] = 1-cos(1) \neq 0$$
+    因此不可微。
+\end{proof}
+类似地还有一些对直线成立，但是对曲线不成立的例子，例如下面的不连续函数
+\begin{example}
+    二元函数$f(x,y): \mathbb{R}^2 \rightarrow \mathbb{R}$为
+    $$f(x,y) = 
+    \left\{
+        \begin{array}{l}
+            0\ \ for\ (x,y) = (0,0); \\
+            \frac{x^2y}{x^4+y^2}\ \ for\ (x,y) \neq (0,0);
+        \end{array}
+    \right.
+    $$
+其于(0,0)不连续.证明略.
+\end{example}
+进一步地，为了能定量量度可微函数对线性的偏离，得到多元函数版本的微分中值定理和拉格朗日余项：
+\begin{theorem}[微分中值定理]
+    设 \( f: \mathbb{R}^n \to \mathbb{R} \) 是在闭凸集 \( D \subset \mathbb{R}^n \) 上连续，在 \( D \) 的内部可微的函数。对于 \( D \) 中的任意两点 \( \mathbf{a} \) 和 \( \mathbf{b} \)，存在 \( \mathbf{a} \) 和 \( \mathbf{b} \) 之间的点 \( \mathbf{c} \)(即 \( \mathbf{c} = \mathbf{a} + t(\mathbf{b} - \mathbf{a}) \) 对于某个 \( t \in (0, 1) \))，使得
+\[
+f(\mathbf{b}) - f(\mathbf{a}) = \nabla f(\mathbf{c}) \cdot (\mathbf{b} - \mathbf{a}),
+\]
+\end{theorem}
+\begin{theorem}[拉格朗日余项]
+    设 \( f: \mathbb{R}^n \to \mathbb{R} \) 是在凸开集 \( U \subset \mathbb{R}^n \) 上的$C^2$光滑函数。对于 \( U \) 中的任意两点 \( \mathbf{a} \) 和 \( \mathbf{b} \)，存在 \( \mathbf{a} \) 和 \( \mathbf{b} \) 之间的点 \( \mathbf{c} \)(即 \( \mathbf{c} = \mathbf{a} + t(\mathbf{b} - \mathbf{a}) \) 对于某个 \( t \in (0, 1) \))，使得
+\[
+f(\mathbf{b}) = f(\mathbf{a}) + \nabla f(\mathbf{a}) \cdot (\mathbf{b} - \mathbf{a}) + \frac{1}{2} (\mathbf{b} - \mathbf{a})^T H_f(\mathbf{c}) (\mathbf{b} - \mathbf{a}),
+\]
+其中，
+ \( H_f(\mathbf{c}) \) 是 \( f \) 在 \( \mathbf{c} \) 处的Hessian矩阵，$H_{f\ ij}= \frac{\partial^2 f}{\partial x_i \partial x_j}$。
+\end{theorem}
+应当注意的是，相比一元情形，增添了一个凸集的条件。这是因为证明是基于路径的，应当保证这样的路径是存在的。\\
+
+如果我们仍然不满意，希望函数偏离多项式不远，于是就有了Taylor公式。利用Peano余项来度量偏离的程度：
+\begin{theorem}[Taylor公式]
+    若函数$f:D (\subset \mathbb{R}^n) \to \mathbb{R}$在$\mathbf{x_0}$的某一开球邻域内是$C^m$光滑的，则在该邻域内，有
+    $$f(\mathbf{x_0}+\mathbf{h}) = f(\mathbf{x_0}) + h_i\partial_i f + \cdots + \frac{1}{m!} h_{k_1} \cdots h_{k_m} \partial_{k_1} \cdots \partial_{k_m}f + o^m(h)$$
+    且
+    $$\lim_{\mathbf{h} \to \mathbf{0}} \frac{o^m(\mathbf{h})}{|h|^m} = 0$$
+\end{theorem}
+更进一步地，希望最好是能展开为一个幂级数，就有了解析性的定义。
+\begin{theorem}
+    设 \( f: \mathbb{R}^n \to \mathbb{R} \) 是在点 \( \mathbf{a} \in \mathbb{R}^n \) 处定义的函数。如果存在一个在 \( \mathbf{a} \) 的某个邻域内收敛到 \( f \) 的幂级数
+\[
+f(\mathbf{x}) = \sum_{\mathbf{k} \in \mathbb{N}^n} c_{\mathbf{k}} (\mathbf{x} - \mathbf{a})^{\mathbf{k}},
+\]
+其中 \( \mathbf{k} = (k_1, k_2, \ldots, k_n) \) 是多指标，\( c_{\mathbf{k}} \) 是系数，\( (\mathbf{x} - \mathbf{a})^{\mathbf{k}} = (x_1 - a_1)^{k_1} (x_2 - a_2)^{k_2} \cdots (x_n - a_n)^{k_n} \)，则称 \( f \) 在 \( \mathbf{a} \) 处解析。
+
+如果 \( f \) 在其定义域内的每一点都解析，则称 \( f \) 是解析函数。
+\end{theorem}
+需要注意的是，解析一定$C^{\infty}$光滑，反之不真。一个著名的例子来自所谓的“本性奇点”.
+\begin{example}
+    函数$$f(x, y) = e^{-\frac{1}{x^2+y^2}}\ ((x,y) \neq (0,0));\ 0 \ ((x,y)=(0,0))$$是$ C^{\infty}$光滑的，但其于$(0,0)$不解析。
+\end{example}
+\subsection{反函数定理}
+\begin{theorem}
+    设 \( f: \mathbb{R}^n \to \mathbb{R}^n \) 是在开集 \( U \subset \mathbb{R}^n \) 上的连续可微函数。如果在点 \( \mathbf{a} \in U \) 处，\( f \) 的雅可比行列式 \( \det(J_f(\mathbf{a})) \neq 0 \)，则存在 \( \mathbf{a} \) 的一个邻域 \( V \subset U \)，使得 \( f \) 在 \( V \) 上是双射的，并且 \( f^{-1} \) 也是连续可微的。此外，\( f^{-1} \) 在 \( f(\mathbf{a}) \) 处的雅可比矩阵为
+\[
+J_{f^{-1}}(f(\mathbf{a})) = (J_f(\mathbf{a}))^{-1}.
+\]
+也许会考察叙述。
+\end{theorem}
+\subsection{一些常用技巧}
+“这是大错特错。”——李思
+\subsubsection{等高线方法}
+等高线是常用的用来描写多元函数的方法。在等高线上和不同等高线之间，多元函数的行为往往类似一个一元函数；一个好的例子来自第四次习题课的第2题；
+\begin{question}
+    设 \( z = f(x, y) \)是 \( C^1 \) 光滑的函数，且满足 \( \frac{\partial f(x,y)}{\partial x} = \frac{\partial f(x,y)}{\partial y} \)，\( \forall (x, y) \in \mathbb{R}^2 \)，若\( f(x, 0) > 0 \)，\( \forall x \in \mathbb{R} \)。证明: \( f(x, y) > 0 \)，\( \forall (x, y) \in \mathbb{R}^2 \)
+\end{question}
+\begin{analysis}
+    注意到$\nabla f$总是平行于$(1,1)$，这意味着与之正交的$x+y=const$上$f(x,y)$是等值的，其行为更类似一个一元函数。
+\end{analysis}
+\begin{proof}
+    做连续的换元
+    $$p = x + y,\ x = \frac{p + q}{2}$$
+    $$q = x - y,\ y = \frac{p - q}{2}$$
+    对$f[x(p,q),y(p,q)] = h(p,q)$
+    $$\frac{\partial f}{\partial p} = \frac{\frac{\partial f}{\partial x} + \frac{\partial f}{\partial y}}{2} = \frac{\partial f}{\partial x}$$
+    $$\frac{\partial f}{\partial q} = \frac{\frac{\partial f}{\partial x} - \frac{\partial f}{\partial y}}{2} = 0$$
+    $$\therefore f(x,y) = h(p)$$
+    $$\therefore f(x,y) = h(x+y) = f(x+y,0) >0$$
+\end{proof}
+以上是一个简单的例子，这个想法在24年6题、22年7题和21年的7题中皆有所体现
+等高线其实意味着由函数方程决定的隐函数。对此，我们有隐函数定理：
+\begin{theorem}[隐函数定理]
+    给定 $k \leq n$ 个 $C^1$ 光滑的函数 $F_1, \ldots, F_k : \mathbb{R}^n \to \mathbb{R}$, 设 $\mathbf{x}_0 = (a_1, \ldots, a_n)$ 是它们的公共零点. 如果 $k \times k$ 矩阵
+    \[
+    \left( \frac{\partial F_i}{\partial x_j} \right)_{1 \leq i, j \leq k}
+    \]
+    在 $\mathbf{x}_0$ 处可逆, 则存在 $(a_1, \ldots, a_{n-k})$ 在 $\mathbb{R}^{n-k}$ 中的开邻域 $U$, 以及 $k$ 个 $C^1$ 光滑的函数 $g_{n-k+1}, \ldots, g_n : U \to \mathbb{R}$, 使得对每个 $(n - k + 1) \leq j \leq n$ 有 $g_j(a_1, \ldots, a_{n-k}) = a_j$, 且对每个 $(x_1, \ldots, x_{n-k}) \in U$, 有
+    \[
+    \begin{cases}
+    F_1(x_1, \ldots, x_{n-k}, g_{n-k+1}(x_1, \ldots, x_{n-k}), \ldots, g_n(x_1, \ldots, x_{n-k})) = 0, \\
+    \vdots \\
+    F_k(x_1, \ldots, x_{n-k}, g_{n-k+1}(x_1, \ldots, x_{n-k}), \ldots, g_n(x_1, \ldots, x_{n-k})) = 0.
+    \end{cases}
+    \]
+\end{theorem}
+\subsubsection{最值定理与介值定理}
+对于连续函数的路径连通性与紧致性，分别有最值定理和介值定理
+\begin{theorem}[介值定理]
+    $\text{设函数 } f: D \subseteq \mathbb{R}^n \to \mathbb{R} \text{ 在路径连通的闭集 } D \text{ 上连续，且 } a, b \in D \text{ 满足 } f(a) \neq f(b) \text{那么对于任意介于 } f(a) \text{ 和 } f(b) \text{ 之间的值 } c,\ \text{ 都存在点 } x \in D,\ \text{ 使得 } f(x) = c$
+\end{theorem}
+\begin{theorem}[最值定理]
+    $$\text{设函数 } f: D \subseteq \mathbb{R}^n \to \mathbb{R} \text{ 在紧致的集合 } D \text{ 上连续，则 } f \text{ 在 } D \text{ 上一定存在最大值和最小值。}$$
+\end{theorem}
+对于最值定理的考察是很多的，例如下面的经典例题，即排除某些点的最值选举权.
+\begin{question}
+    若$(p_1,q_1),(p_2,q_2),(p_3,q_3)$是三角形内一点到三角形三顶点的向量，试证明：
+    $$f(x,y) = e^{p_1x+q_1y} + e^{p_2x+q_2y} + e^{p_3x+q_3y}$$
+    于$\mathbb{R}^2$上存在最小值。
+\end{question}
+\begin{proof}
+    记三顶点为A,B,C，原点为O，(x,y)是点P，由于O在$\triangle ABC$内部，假设$p_1x+q_1y,p_2x+q_2y,p_3x+q_3y$都小于等于0，即$\overrightarrow{OP}$与$\overrightarrow{OA},\overrightarrow{OB},\overrightarrow{OC}$的三个夹角
+    $$\theta_{123} \in [\frac{\pi}{2}, \frac{3\pi}{2}]$$
+    $$\therefore \text{若}|\theta_1 - \theta_2| \in [\frac{\pi}{2},\pi],\ |\theta_1 - \theta_3|,\ |\theta_2-\theta_3| \leq \frac{\pi}{2}$$
+    这与O在$\triangle$ABC内部矛盾。因此，至少存在一个$p_ix+q_iy > 0$
+    $$\therefore \lim_{|\vec{x}| \to \infty} f(\vec{x}) \to +\infty$$
+    即
+    $$\forall M > 0 ,\exists R>0, s.t. \forall |\vec{x}| > R, f(\vec{x}) > M$$
+    令$M = f(0,0)$,\ 
+    $\because \bar{B}_R(0,0)$是有界闭集，其是紧致的，由最值定理
+    $$\therefore \exists \vec{x}_0 \in \bar{B}_R(0,0),\ m=f(\vec{x}_0) \leq f(\vec{x})\ \  \forall\vec{x} \in \bar{B}_R(0,0)$$
+    $$\forall \vec{x} ,|\vec{x}| > R, f(\vec{x}) > M = f(0,0) \geq m$$
+    即有最小值m.
+\end{proof}
+\subsubsection{不等式问题}
+%类似的题目大多在极值点附近研究不等式。这些不等式大多基于Cauchy-Schwarz不等式，然后利用极值点处导数为0消去一些多余的导数项。如24年7题、23年的56、7题和22年6题；这里就从略了。
+Cauchy-Schwarz不等式在很多不等式题目中都是常见的，类似的题目大多会出现类似于矢量模或者内积的构造。以下面的题目为例：
+\begin{question}
+    设 \( f: \mathbb{R}^2 \to \mathbb{R} \) 是光滑函数，满足当 \( x^2 + y^2 = 1 \) 时有 \( f(x, y) = 1 \)，且在单位圆盘 \( D = \{(x, y) \mid x^2 + y^2 \leq 1\} \) 上 \( \left( \frac{\partial f}{\partial x} \right)^2 + \left( \frac{\partial f}{\partial y} \right)^2 \) 的值处处小于等于 1. 证明:
+\[
+x^2 + y^2 \leq f(x, y) \leq 2 - \sqrt{x^2 + y^2}, \quad \forall (x, y) \in D.
+\]
+\end{question}
+\begin{analysis}
+    约束光滑函数的导数从而约束函数值的，往往通过微分中值定理实现。而所给条件
+    $$\frac{\partial f}{\partial x}^2 + \frac{\partial f}{\partial y}^2 = |\nabla f|^2 \leq 1$$
+    是矢量模长的形式，由此不难想到用Cauchy-Schwarz不等式来证明。
+\end{analysis}
+\begin{proof}
+    有微分中值定理，对D内任一点$(rcos(\theta),rsin(\theta))\ (r<1)$，由微分中值定理有
+    $$\exists t \in (r,1), f(rcos(\theta),rsin(\theta)) - f(cos(\theta),sin(\theta)) = ((r-1)cos(\theta),(r-1)sin(\theta)) \cdot \nabla f(tcos(\theta),tsin(\theta))$$
+    由Cauchy-Schwarz不等式，有
+    $$|1-f(rcos(\theta),rsin(\theta))| \leq |r-1| |\nabla f| \leq 1-\sqrt{x^2+y^2}$$
+    $$\therefore \sqrt{x^2 + y^2} \leq f(x,y) \leq 2 - \sqrt{x^2 +y^2}$$
+\end{proof}
+另一个使用Cauchy-Schwarz不等式的例子是Kato不等式。
+\begin{theorem}[Kato不等式]
+    对光滑函数$u:\mathbb{R^n} \to \mathbb{R}$，有
+    $$|\nabla|\nabla u||^2 \leq \sum_{i,j=1}^{n} (\partial_i \partial_j u)^2$$
+\end{theorem}
+\begin{proof}
+    由于函数光滑
+    $$\nabla|\nabla u| = \nabla \sqrt{\sum_{i=1}^{n} (\partial_i u)^2} = \sum_{i=1}^{n} \sum_{j=1}^{n} \frac{\hat{e_j} \partial_i \partial_j u \partial_i u }{\sqrt{\sum_{i=1}^{n} (\partial_i u)^2}}$$
+    $$\therefore |\nabla|\nabla u||^2 = \sum_{j=0}^{n}  \frac{(\sum_{i=1}^{n} \partial_i \partial_j u \cdot \partial_i u)^2}{\sum_{i=1}^{n} (\partial_i u)^2}$$
+    由Cauchy-Schwarz不等式
+    $$|\nabla|\nabla u||^2 \leq \sum_{j=0}^{n} \frac{\sum_{i=1}^{n} (\partial_i \partial_j u)^2 \cdot \sum_{i=1}^{n} (\partial_i u)^2}{\sum_{i=1}^{n} (\partial_i u)^2} = \sum_{i,j=1}^{n} (\partial_i \partial_j u)^2$$
+\end{proof}
+也有利用极值点/最值点的不等式的题目，这些题目的主要特征是对二阶或更高阶导数的约束，利用极值点可以使得一阶导为0，减少困难。
+\begin{question}
+    令 \( D = \{(x, y) \mid x^2 + y^2 < 1\} \) 为开圆盘, \( S = \{(x, y) \mid x^2 + y^2 = 1\} \) 为其边界. 设 \( C^2 \) 光滑函数 \( u, v: \mathbb{R}^2 \to \mathbb{R} \) 满足: 在 \( D \) 中处处有
+\[
+-\Delta u - (1 - u^2 - v^2)u = 0, \quad -\Delta v - (1 - u^2 - v^2)v = 0,
+\]
+且对 \( (x, y) \in S \) 有 \( u(x, y) = v(x, y) = 0 \)，其中 \( \Delta u = \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} \).\\
+证明: 对任何 \( (x, y) \in D \) 有
+    \[
+    u^2(x, y) + v^2(x, y) \leq 1.
+    \]
+\end{question}
+\begin{proof}
+    为证$ u^2(x, y) + v^2(x, y) \leq 1.$，考虑$ u^2(x, y) + v^2(x, y) = f(x,y)$的最大值。由于$D \cap S$是有界闭集，即是紧致的，由最值定理，
+    $$\exists (x_0,y_0) \in D \cap S,\ f(x_0,y_0) \geq f(x,y)\ \ \forall (x,y) \in D \cap S \supset D$$
+    只需证$1 \geq f(x_0,y_0)$
+    由于$f(x,y) \in C^2[D \cap S \to \mathbb{R}]$，由二阶微分中值和费马原理,$\exists \theta \in (0,1)$
+    $$f(x_0 + \Delta x,y_0 + \Delta y) - f(x_0,y_0) = \frac{1}{2} 
+    \begin{bmatrix}
+        \Delta x&\Delta y\\
+    \end{bmatrix}
+    \begin{bmatrix}
+        \partial_{xx}^2 f(\vec{x_0} +\theta \Delta\vec{x})&\partial_{xy}^2 f(\vec{x_0} +\theta \Delta\vec{x})\\
+        \partial_{yx}^2 f(\vec{x_0} +\theta \Delta\vec{x})&\partial_{yy}^2 f(\vec{x_0} +\theta \Delta\vec{x})\\
+    \end{bmatrix}
+    \begin{bmatrix}
+        \Delta x\\\Delta y\\
+    \end{bmatrix} \leq 0
+    $$
+    对任意$(\Delta x,\Delta y)$都成立，因此，Hessian矩阵是不严格负定的，即
+    $$\partial_{xx}^2 f(\vec{x_0} +\theta \Delta\vec{x}) \leq 0,\ \partial_{yy}^2 f(\vec{x_0} +\theta \Delta\vec{x}) \leq 0$$
+    由此
+    $$\nabla^2 f(\vec{x}_0 +\theta\Delta\vec{x}) \leq 0$$
+    由于$C^2$连续，
+    $$\nabla^2 f(x,y) = \lim_{\theta \to 0} \nabla^2 f(\vec{x}_0 +\theta\Delta\vec{x}) \leq 0$$
+    $$\therefore \nabla^2 (u^2+v^2) = \nabla \cdot (2u \nabla u + 2v \nabla v) = 2|\nabla u|^2 + 2|\nabla v|^2 + 2u \nabla^2 u + 2v \nabla^2 v \leq 0$$
+    带入条件方程，于$(x_0,y_0)$有
+    $$u \nabla^2 u + v \nabla^2 v = (u^2 + v^2) (u^2 + v^2 - 1) \leq 0$$
+    \begin{enumerate}
+        \item 若$(u^2+v^2) \leq 0$，考虑边界为0，$u^2 + v^2 \equiv 0 \leq 1$
+        \item 若$(u^2+v^2) > 0$，则$(u^2+v^2-1) \leq 0$，即$$(u^2+v^2) \leq 1$$
+    \end{enumerate}
+    $$\therefore 1 \geq f(x_0,y_0) \leq u(x,y)^2 + v(x,y)^2 \ \ \forall (x,y) \in D$$
+\end{proof}
+\section{写在最后}
+    此笔记基于艾颖华老师之高等微积分课程授课内容，写作时间仓促，笔者水平亦有限，错漏难免，亦不全面，冀望各位高水平人士为之补全。笔者万分荣幸，感激不尽。\\
+    \    第二版改正了一些错误，增补了相关的习题和例子，特别感谢王翟同学、刘宏润同学、王博樊同学、丁睿立同学以及助教和老师的帮助、批评指正。\\
+    \    如果你觉得这篇笔记对你有帮助，且愿意请我喝咖啡的话，我个人%和下面的二维码都
+    是十分欢迎的。\\
+    \ \\
+    \includegraphics[width=\textwidth]{Yumemizuki Mizuki.jpg}\\
+\end{document}
