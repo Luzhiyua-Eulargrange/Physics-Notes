@@ -1,0 +1,474 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{braket}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{abstract}
+\usepackage{titlesec}
+\usepackage{cite}
+\usepackage{fancyhdr}
+\usepackage{tocloft}
+\usepackage{appendix}
+\usepackage{mathrsfs}
+
+\usepackage{caption}
+\usepackage{tikz-cd}
+% 页眉页脚设置
+%\setlength{\headheight}{13.6pt}
+%\pagestyle{fancy}
+%\fancyhf{}
+%\fancyhead[L]{\small Mathematical Methods in Quantum Mechanics}
+%\fancyhead[R]{\small Scattering Theory}
+%\fancyfoot[C]{\thepage}
+
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{question}{Question}
+\newtheorem{answer}{Ans}[section]
+\DeclareMathOperator{\slim}{s\text{-}lim}
+
+% 章节格式
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% 摘要格式
+\renewcommand{\abstractname}{\Large\textbf{Abstract}}
+\renewcommand{\absnamepos}{flushleft}
+
+% 参考文献标题
+\renewcommand{\refname}{\Large\textbf{References}}
+
+\begin{document}
+
+%title
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Large\bfseries Mathematical Basis of Scattering Theory\par}
+    \vspace{1.5cm}
+    {Lu Zhiyuan \ 2024011183 \ Department of Physics\par}
+    \vspace{1cm}
+    \vfill
+    \begin{abstract}
+        \noindent
+        This work underscores the power of combining operator theory, harmonic analysis, and group representations to elucidate fundamental aspects of quantum scattering phenomena.
+        Scattering theory is a fundamental topic in quantum mechanics that describes how particles interact with potentials. 
+        In this course project, we review key mathematical concepts in the Hilbert space formulation of scattering, including wave operators, their existence conditions (Cook's lemma), and the use of the Mellin transform to separate incoming and outgoing asymptotic states. 
+        We further derive the Mellin transform using group--theoretic methods, highlighting the roles of the rotation group $SO(n)$ and the dilation group in its construction. As an application, we consider scattering from a spherically symmetric Gaussian potential in three dimensions. 
+        Using the Mellin transform, we decompose the free state into incoming and outgoing components, expressed in terms of spherical Hankel functions, thereby demonstrating the consistency and physical clarity of the approach. This work underscores the interplay between operator theory, group representations, and asymptotic analysis in scattering problems.
+    \end{abstract}
+    \vfill
+\end{titlepage}
+
+%\tableofcontents
+%\thispagestyle{empty}
+%\newpage
+
+\setcounter{page}{1}
+\section{Introduction}
+Scattering theory is an important topic in quantum mechanics that describes how particles interact with potentials. 
+In this course project, we review the key mathematical concepts: wave operators in Hilbert space, their existence conditions (Cook's lemma), and how the Mellin transform can be used to separate incoming and outgoing asymptotic states. 
+We also explore the group--theoretic derivation of the Mellin transform. 
+Finally, we apply these methods to a simple example: scattering from a spherically symmetric Gaussian potential.
+\section{Basic Principles of Scattering in Hilbert Space}
+From the abstract definition of wave operators, we now proceed to their concrete analysis. 
+The Cook lemma provides a useful condition for establishing existence, while the Mellin transform offers a natural way to separate incoming and outgoing states by diagonalizing the dilation operator.
+\subsection{Scattering Operator}
+Firstly, we consider the normal Physics case of Scattering. 
+In this case, when $t \to \pm \infty$, the incoming/outgoing particle looks like moving freely without the interaction of local scattering potential. 
+The real state is called scattering state $\psi$, while the incoming/outgoing state moving freely called free state $\psi_\pm$
+Denote the time evolution operator as $U(t)$ for total Hamiltonian and $U_0(t)$ for free Hamiltonian.
+$$\lim\limits_{t \to \pm\infty} ||U(t)\psi - U_0(t)\psi_\pm|| = 0$$
+i.e. ($U(t)$ is unitary)
+$$\lim\limits_{t \to \pm\infty} ||\psi - U^{-1}(t) U_0(t)\psi_\pm|| = 0$$
+Therefore the wave operator $\Omega_\pm$ can be defined
+$$\Omega_\pm := \slim\limits_{t\to\pm\infty} U^{-1}(t)U_0(t),\ D(\Omega_\pm) = \{\psi \in \mathbb{H}| \exists \phi\in\mathbb{H}, \phi = \lim\limits_{t\to\pm\infty} U^{-1}(t) U_0(t) \psi\}$$
+In Physics, what matters is the corelation between incoming states and outgoing state, i.e. S-matrix. In infinite dimension case, it becomes scattering operator $S$
+$$S = \Omega_+^{-1}\Omega_-,\ D(S) =\{\psi\in D(\Omega_-)|\Omega_-\psi\in Ran(\Omega_+)\}$$
+Now we carefully consider the property of those operators. 
+It is not hard to see the lemma. 
+\begin{lemma}
+    The sets $D(\Omega_\pm)$ and $Ran(\Omega_\pm)$ are closed and $\Omega_\pm$ is isometric.
+\end{lemma}
+Next, we can introduce the intertwining property of wave operator. Observe that
+$$\forall \psi \in D(\Omega_\pm),\ \lim\limits_{t\to\pm\infty} U^{-1}(t) U_0(t)U_0(s)\psi = \lim\limits_{t\to\pm\infty}U(s)U^{-1}(t+s)U_0(t+s)\psi$$
+i.e.
+$$\Omega_\pm U_0(s) = U(s)\Omega_\pm,\ \forall \psi \in D(\Omega_\pm)$$
+The generator(Hamiltonian) of a one-parameter unitary group($U(s)$) has the same property
+$$\Omega_\pm H_0 = H\Omega_\pm,\ \forall \psi \in D(\Omega_\pm)$$
+i.e. a commutative diagram Figure 1.\\
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzcd}[row sep=large, column sep=large]
+        D(\Omega_\pm) \arrow[r, "\Omega_\pm"] \arrow[d, "H_0"'] & Ran(\Omega_\pm) \arrow[d, "H"] \\
+        H_0D(\Omega_\pm) \arrow[r, "\Omega_\pm"'] & H\,\mathrm{Ran}(\Omega_\pm)
+    \end{tikzcd}
+    \caption{the Commutative Diagram}
+    \label{fig:comm-diagram}
+\end{figure}
+By the intertwining property, it is easy to check whether $\psi\in\mathbb{H}_{pp, H_0}$ is in $D(\Omega)$
+because $\psi \in D(\Omega_\pm)$ is an eigenfunction of $H_0$ if there is an eigenfunction $\phi\in Ran(\Omega_\pm)$ of $H$ has the same eigenvalue.
+Therefore, only the continuous subspace is of interest. For simplicity, we assume that the Hamiltonian has no singular continuous spectrum.
+Therefore, we can change the definition of wave operator by projecting it to $\mathbb{H}_{ac, H_0}$
+\begin{definition}
+    The wave operator $\Omega_\pm$ of Hamiltonian $H = H_0 + V$ is 
+    $$\Omega_\pm := \slim_{t\to\pm\infty} U^{-1}(t)U_0(t)$$
+    $$D(\Omega_\pm) := \{\psi\in\mathbb{H}_{ac, H_0}|\exists \lim\limits_{t\to\infty} U^{-1}(t)U_0(t)\psi\}$$
+\end{definition}
+We will say that the wave operators \textbf{exists} if all elements of $\mathbb{H}_{ac,H_0}$ are asymptotic states, i.e.
+$$\mathbb{H}_{ac,H_0} = D(\Omega_\pm)$$
+Similarly, the wave operators is \textbf{complete} if all elements of $\mathbb{H}_{ac,H_0}$ are scattering states, i.e.
+$$\mathbb{H}_{ac,H_0} = Ran(\Omega_\pm)$$
+The completeness implies that the wave operator is unitary, therefore the scattering operator 
+$$S := \Omega_+^{-1}\Omega_-$$ 
+is unitary.
+Hence, by intertwining property and the self-adjoint Hamiltonian
+$$\braket{\psi_-|H_0\psi_-} = \braket{S\psi_-|SH_0\psi_-} = \braket{S\psi_-|\Omega_+^{-1}H\Omega_-\psi_-} = \braket{S\psi_-|H_0S\psi_-} = \braket{\psi_+|H_0\psi_+}$$
+which means the kinetic is preserved in scattering process.
+\subsection{Cook Lemma}
+However, note that the whole theory is meaningless until we can prove that the domain $D(\Omega_\pm)$ is nontrivial. Fortunately, Cook lemma can help us to prove that.
+\begin{lemma}[Cook]
+    Suppose \(D(H_0) \subseteq D(H)\). If
+\[
+\int_{0}^{\infty} \|(H - H_0) U_0(\pm t) \psi\| \, dt < \infty, \quad \psi \in D(H_0),
+\]
+then \(\psi \in D(\Omega_{\pm})\), respectively. Moreover, we even have
+\[
+\|(\Omega_{\pm} - I)\psi\| \leq \frac{1}{\hbar}\int_{0}^{\infty} \|(H - H_0) U_0(\pm t) \psi\| \, dt
+\]
+in this case.
+\end{lemma}
+\begin{proof}
+    Observe that for the one-parameter-unitary-group
+    $$\frac{d}{dt} U(-t)U_0(t) = \frac{i}{\hbar}HU(-t)U_0(t) - \frac{i}{\hbar}U(-t)H_0U_0(t) = \frac{i}{\hbar}U(-t)(H-H_0)U_0(t)$$
+    integrating
+    $$U(-t)U_0(t)\psi = \psi + \frac{i}{\hbar} \int_{0}^{t} U(-t)(H-H_0)U_0(t) dt$$
+    therefore
+    \begin{align*}
+        \|(\Omega_\pm -1)\psi\| 
+        &= \frac{1}{\hbar}\|\int_{0}^{\infty} U(\mp t)(H-H_0)U_0(\pm t)\psi dt \|\\
+        &\leq \frac{1}{\hbar} \int_{0}^{\infty} \|U(\mp t)(H-H_0)U_0(\pm t)\psi \|dt\\
+        &= \frac{1}{\hbar} \int_{0}^{\infty} \|(H-H_0)U_0(\pm t)\psi \|dt\\
+    \end{align*} 
+\end{proof}
+As a simple example, consider the Schrödinger operator in $\mathbb{R}^3$, which contains most low energy Physics condition.
+\begin{example}
+    Suppose \( H_0 \) is the free Schrödinger operator \(H_0 = -\frac{\hbar^2}{2m}\nabla\) and \( H = H_0 + V \) with \( V \in L^2(\mathbb{R}^3) \). Then the wave operators exist and \( D(\Omega_\pm) = \mathbb{H} \).
+\end{example}
+\begin{proof}
+Since we want to use Cook's lemma, we need to estimate
+\[
+\|V \psi(s)\|^2 = \int_{\mathbb{R}^3} |V(x) \psi(s, x)|^2 \, dx, \quad \psi(s) = U_0(s) \psi,
+\]
+for given \( \psi \in D(H_0) \). Observe that
+\[
+\|V \psi(s)\| \leq \|\psi(s)\|_\infty \|V\|, \quad s > 0,
+\]
+Consider the Fourier transform
+$$\mathcal{F} U_0(s)\psi = e^{-i\frac{p^2}{2m\hbar}s}\hat{\psi}(p)$$
+i.e.
+$$\psi(s) = \mathcal{F}^{-1} e^{-i\frac{p^2}{2m\hbar}s}\hat{\psi}(p)$$
+Therefore, $\psi(s)$ can be expressed as a convolution.
+However, $e^{-i\frac{p^2}{2m\hbar}s} \notin L^2$, the integration can not along the real axis.
+Therefore, consider the regularization 
+$$f_\epsilon(p) = e^{-\frac{p^2}{2m\hbar}(is+\epsilon)} \in L^2$$
+The Fourier inverse transform ($n$ is the dimension number, here $n=3$)
+$$\mathcal{F}^{-1} f_\epsilon(p) = (\frac{m\hbar}{is+\epsilon})^{\frac{n}{2}}\frac{1}{(2\pi)^{\frac{n}{2}}} e^{-\frac{mx^2}{2\hbar(is+\epsilon)}}$$
+By convolution formula
+$$\mathcal{F}^{-1} f_\epsilon(p) \hat{\psi}(p) = \psi(x) * \mathcal{F}^{-1} f_\epsilon(p) = (\frac{m\hbar}{(2\pi)(is + \epsilon)})^{\frac{n}{2}} \int_{\mathbb{R}^n} \psi(y) e^{-\frac{m}{2\hbar(is+\epsilon)}|x-y|^2} d^ny$$
+Therefore ($\epsilon \to 0$)
+$$\|\psi(s)\|_\infty \leq (\frac{m\hbar}{2\pi s})^{\frac{3}{2}} \|\psi\|_1$$
+i.e.
+$$\|V \psi(s)\| \leq \|\psi(s)\|_\infty \|V\| \leq \|V\| (\frac{m\hbar}{2\pi s})^{\frac{3}{2}} \|\psi\|_1$$
+at least for \( \psi \in L^1(\mathbb{R}^3)\), the wave operator exists. 
+Moreover, this implies (Set the time zero to $t=1$.)
+\[
+\int_{1}^{\infty} \|V \psi(s)\| \, ds \leq \frac{1}{4\pi^{3/2}} \|\psi\|_1 \|V\|
+\]
+and thus every such \( \psi \) is in \( D(\Omega_+) \). Since such functions are dense, we obtain \( D(\Omega_+) = \mathbb{H} \), and similarly for \( \Omega_- \).
+\end{proof}
+\subsection{Mellin Transform}
+Consider real physical processes, the asymptotic scattering states can be divided into two parts: incoming states and outgoing states. 
+By the physical meaning, the difference between incoming and outgoing states is the dependence of $x^2$ on time.
+$$\frac{d}{dt} \mathbb{E}(x^2)_\psi(t) = \frac{d}{dt} \bra{\psi} x^2 \ket{\psi} = \bra{\psi}\frac{i}{\hbar}[H_0, x^2]\ket{\psi}$$
+By the basic commutation relation,
+$$\frac{i}{\hbar} [H_0,x^2] = \frac{2}{m} \frac{px+xp}{2} = \frac{4}{m} D$$
+$D$ is the Dilation operator. 
+$$D = \frac{1}{2}(x\cdot p + p\cdot x) = xp - i\hbar\frac{n}{2}$$
+Obviously $D$ is self-adjoint in $L^2(\mathbb{R}^n)$ with dense domain
+$$D(D) = D(x) \cap D(p)$$
+By Stone theorem, $D$ generates a one-parameter unitary group
+$$U_D(\rho) = e^{i\frac{D}{\hbar} \rho},\ \rho \in \mathbb{R}$$
+which is just the dilation operator. The effect of $U_D(\rho)$ can be calculated as below.
+Consider the relation between generator and differential
+$$\frac{d}{d\lambda} U_D(\lambda)\psi =  i\frac{D}{\hbar} U_D(\lambda) \psi = (x\cdot \nabla +\frac{n}{2}) U_D(\lambda) \psi$$
+Solve the differential equation. 
+To eliminate the derivative term of x, assume that $U_D(\lambda)\psi(x)$ has the same form $
+$$U_D(\lambda)\psi(x) = \phi(\lambda, y(\lambda,x))$
+Therefore
+$$\frac{d}{d\lambda} U_D(\lambda)\psi = \frac{d}{d\lambda} \phi = \frac{\partial\phi}{\partial\lambda} + \frac{\partial y}{\partial\lambda} \cdot \nabla_y\phi = \frac{n}{2}\phi + x \cdot \frac{\partial y}{\partial x} \cdot \nabla_y \phi$$
+i.e.
+$$(\frac{\partial}{\partial\lambda} -\frac{n}{2})\phi = (\frac{\partial y}{\partial\lambda} - x\cdot\frac{\partial y}{\partial x}) \cdot \nabla_y \phi$$
+Due to the initial condition $y(0,x) = x,\ \phi(0,x) = \psi(x)$, a possible solution is
+$$y(\lambda,x) = e^{-\lambda} x,\ \phi(\lambda,y) = e^{\frac{n}{2}\lambda} \psi(e^{\lambda} x)$$
+i.e.
+$$U_D(\lambda)\psi(x) = e^{\frac{n}{2}\lambda} \psi(e^{\lambda} x)$$
+Therefore, the dilation operator acts as its name suggests, i.e. dilating the space coordinates.
+Furthermore, consider the Fourier transform of $D$
+\begin{align*}
+    \mathcal{F} D \psi(p) 
+    &= \frac{1}{(2\pi\hbar)^{\frac{n}{2}}} \int_{\mathbb{R}^n} e^{-\frac{i}{\hbar} p\cdot x} (xp - i\hbar\frac{n}{2}) \psi(x) d^nx\\
+    &= -\frac{1}{(2\pi\hbar)^{\frac{n}{2}}} \int_{\mathbb{R}^n} e^{-\frac{i}{\hbar} p\cdot x} (i\hbar x \cdot \nabla_x) \psi(x) d^nx - i\hbar\frac{n}{2}\hat{\psi}(p)\\
+    &= -\frac{i\hbar}{(2\pi\hbar)^{\frac{n}{2}}} [(\text{boundary}=0) - \int_{\mathbb{R}^n} \psi(x) \nabla_x \cdot (x e^{-\frac{i}{\hbar} p\cdot x} ) d^nx ] - i\hbar\frac{n}{2}\hat{\psi}(p)\\
+    &= \frac{1}{(2\pi\hbar)^{\frac{n}{2}}} p\cdot \int_{\mathbb{R}^n} x\psi(x)  e^{-\frac{i}{\hbar} p\cdot x} d^nx + i\hbar\frac{n}{2}\hat{\psi}(p)\\
+    &= p \cdot \mathcal{F} [x\psi(x)]  + i\hbar\frac{n}{2}\hat{\psi}(p)\\
+    &= i\hbar (p \cdot \nabla_p + \frac{n}{2}) \hat{\psi}(p)\\
+\end{align*}
+i.e.
+$$\mathcal{F} D = -D\mathcal{F}$$
+Since the dilation group acts only on $|x|$, it seems reasonable to switch to polar coordinates
+$$x = r\omega,\ (r,\omega) \in \mathbb{R}^+ \times S^{n-1}$$
+where $S^{n-1}$ is the unit sphere in $\mathbb{R}^n$. In this case, the one-parameter-unitary-group elements
+$$U_D(\rho)\psi(r\omega) = e^{\frac{n}{2}\rho} \psi(e^{-\rho} r\omega)$$ 
+$D$ looks like a radial derivative operator. We want to change $D$ into a multiplication operator, therefore it will be easy to distinguish whether the state is incoming or outgoing. 
+What we need is Fourier transform on $\rho = \ln r$, which introduces \textbf{Mellin transform}.
+\begin{definition}[Mellin Transform]
+    Denote the Mellin transform as $\mathscr{M}$
+    $$\mathscr{M}:\ L^2(\mathbb{R}^n) \to L^2(\mathbb{R} \times S^{n-1})$$
+    $$\psi(r\omega) \to (\mathscr{M}\psi)(\lambda,\omega) = \frac{1}{\sqrt{2\pi}}\int_0^\infty r^{-i\lambda} \psi(r\omega)r^{\frac{n}{2}-1} dr$$
+\end{definition}
+Denote $r = e^\rho$. Furthermore, the dilation group satisfies ($\forall \psi \in D(D)$)
+\begin{align*}
+    e^{is\lambda} (\mathscr{M}\psi)(\lambda,\omega)
+    &= \frac{1}{\sqrt{2\pi}} \int_0^\infty r^{-i\lambda} e^{is\lambda} \psi(r\omega) r^{\frac{n}{2}-1} dr\\
+    &= \frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty e^{-i\lambda(\rho - s)} e^{\frac{n}{2}(\rho - s)} e^{\frac{n}{2}s} \psi(e^{(\rho-s)} e^s \omega) d(\rho-s)\\
+    &= \frac{1}{\sqrt{2\pi}} \int_0^\infty t^{-i\lambda} e^{\frac{n}{2}s} \psi(e^s t \omega) t^{\frac{n}{2}-1} dt\\
+    &= (\mathscr{M} U_D(s) \psi)(\lambda,\omega)
+\end{align*}
+i.e.
+$$\mathscr{M} U_D(s) \mathscr{M}^{-1} = e^{is\lambda}$$
+and hence the generator
+$$\mathscr{M} D \mathscr{M}^{-1} = \lambda$$
+which means that the Mellin transform change the dilation operator into a multiplication operator $M_\lambda$.
+Consider that $D(\mathscr{M}) = \mathbb{H}$, while $\mathscr{M}$ is isometric, because
+\begin{align*}
+    ||\mathscr{M}\psi||^2 
+    &= \int_{S^{n-1}} d\omega \int_{-\infty}^\infty |(\mathscr{M}\psi)(\lambda,\omega)|^2 d\lambda\\
+    &= \int_{S^{n-1}} d\omega \int_{-\infty}^\infty d\lambda \frac{1}{2\pi} \int_0^\infty \int_0^\infty r^{-i\lambda} s^{i\lambda} \psi(r\omega) \overline{\psi(s\omega)} (rs)^{\frac{n}{2}-1} dr ds\\
+    &= \int_{S^{n-1}} d\omega \int_0^\infty \int_0^\infty \delta(\ln s - \ln r) \psi(r\omega) \overline{\psi(s\omega)} (rs)^{\frac{n}{2}-1} dr ds\\
+    &= \int_{S^{n-1}} d\omega \int_0^\infty |\psi(r\omega)|^2 r^{n-1} dr\\
+    &= ||\psi||^2
+\end{align*}
+$\mathscr{M}$ is unitary, while $D$ is obviously self-adjoint, therefore the spectrum of $D$ is $\mathbb{R} \ni \lambda$.
+i.e.
+$$\sigma(D) = \sigma_{ac}(D) = \mathbb{R},\ \sigma_{sc}(D) = \sigma_{pp}(D) = \emptyset$$
+Back to the beginning question, 
+$$\frac{d\braket{x^2}_\psi}{dt} = 4\bra{\psi} D \ket{\psi} = 4 \bra{\mathscr{M}\psi}\lambda\ket{\mathscr{M}\psi}$$
+we can separate the incoming and outgoing states by the sign of $\lambda$ in Mellin transform space.
+Furthermore, we can define the projection operators
+$$P_\pm = \mathscr{M}^{-1} \chi_{[0,\pm\infty)}(\lambda) \mathscr{M} = P_D((0,\pm\infty))$$
+Consider the spectrum of $D$, $P_\pm$ are orthogonal projections and
+$$P_+ + P_- = 1,\ P_+ P_- = P_- P_+ = 0$$
+which means that the incoming and outgoing states
+$$\psi_\pm = P_\pm \psi,\ \forall \psi \in D(D)$$
+are well defined, as well as orthogonal and complete.
+\section{Group Methods in Mellin Transform}
+The form of the Mellin transform can be derived by solving higher-dimensional differential equations, but such an approach often depends on the choice of coordinates. 
+We aim to derive the Mellin transform intrinsically using group-theoretic methods.
+\subsection{Rotational Symmetry}
+In Physics, the most common free Hamiltonian is the Schrödinger operator, or at least it is rotationally symmetric.
+To separate the radial components, consider that $\mathbb{H}=L^2(\mathbb{R}^n)$ is a representation space of the rotation group $SO(n)$.
+In $\mathbb{R}^3$, the consequence is well known as the spherical harmonics expansion.
+$$\psi(r\omega) = \sum_{l=0}^\infty \sum_{m=-l}^l R_{lm}(r) Y_{lm}(\omega)$$
+while $\{Y_{lm}(\omega)\}_{|m| \geq 0}^{2l+1}$ are spherical harmonics, which are the basis functions of irreducible representation of $SO(3)$ with dimension $2l+1$.
+Similarly, in $\mathbb{R}^n$, we want to decompose the representation of $SO(n)$ into irreducible representations $\pi_l$ and a radial part.\\
+Observe that $SO(n)$ acts transitively on $S^{n-1}$ and the stabilizer of a point is isomorphic to $SO(n-1)$, due to the homogeneous space theory,
+$$S^{n-1} = SO(n)/SO(n-1)$$
+therefore, the induced representation on $SO(n-1)$ of identity representation $1_{SO(n-1)}$
+$$L^2(S^{n-1}) = \operatorname{Ind}_{SO(n-1)}^{SO(n)} 1_{SO(n-1)}$$
+consider the Frobenius reciprocity theorem,
+\begin{theorem}[Frobenius Reciprocity]
+For $H \leq G$, $\rho \in \hat{H}$, $\pi \in \hat{G}$:
+\[
+\langle \pi, \operatorname{Ind}_H^G \rho \rangle_G = \langle \rho, \operatorname{Res}_H^G \pi \rangle_H.
+\]
+\end{theorem}
+Consider that in restricted representation, identity representation only appears once, therefore
+$$\langle \pi_l, \operatorname{Ind}_{SO(n-1)}^{SO(n)} 1_{SO(n-1)} \rangle_{SO(n)} = \langle 1_{SO(n-1)}, \operatorname{Res}_{SO(n-1)}^{SO(n)} \pi_l \rangle_{SO(n-1)} = 1$$
+i.e. $$\langle \pi_l, L^2(S^{n-1}) \rangle_{SO(n)} = 1$$
+i.e. each irreducible representation appears \textbf{only once} in $L^2(S^{n-1})$.
+Therefore, by the Peter-Weyl theorem, 
+$$L^2(SO(n)) = \bigoplus_{l=0}^\infty \dim(\pi_l) \pi_l$$
+consider that
+$$L^2(S^{n-1}) = L^2(SO(n)/SO(n-1))$$
+That just means those elements of $L^2(SO(n))$ which are invariant under the right action of $SO(n-1)$, i.e.\\
+1. each irreducible representation $\pi_l$ appears only once in $L^2(S^{n-1}) = L^2(\frac{SO(n)}{SO(n-1)})$.\\
+2. each irreducible representation $\pi_l$ is contained in $L^2(SO(n))$.\\
+Therefore,
+$$L^2(S^{n-1}) = \bigoplus_{l=0}^\infty \pi_l$$
+Furthermore, the whole Hilbert space can be decomposed as
+$$\mathbb{H} = \bigoplus_{l=0}^\infty \pi_l \otimes L^2(\mathbb{R}^+, r^{n-1}dr)$$
+Denote the basis functions of $\pi_l$ as $\{Y_{l,m}(\omega)\}_{m}^{\dim(\pi_l)}$, where $m$ is a multi-index.
+Therefore any $\psi \in \mathbb{H}$ can be expanded as
+$$\psi(r\omega) = \sum_{l=0}^\infty \sum_{m}^{\dim(\pi_l)} R_{l,m}(r) Y_{l,m}(\omega)$$
+Due to Schur's lemma, those radial functions $R_{l,m}(r)$ are independent of $m$, and hence
+$$\psi(r\omega) = \sum_{l=0}^\infty \sum_{m}^{\dim(\pi_l)} R_l(r) Y_{l,m}(\omega)$$
+where $Y_l(\omega)$ is a vector in $\pi_l$. 
+Schur's lemma also makes sure that all the $Y_{l,m}$ are orthogonal to each other.
+\subsection{Dilation Group}
+We have separated the angular part by the rotational symmetry.
+Now we consider the radial dilation group $G_D = \{U_D(\rho)|\rho \in \mathbb{R}\}$.
+Rescaling the function as
+$$\phi(\rho, \omega) = e^{\frac{n}{2}\rho}\psi(e^{\rho}, \omega) = \sum_{l=0}^\infty \sum_{m}^{\dim(\pi_l)} e^{\frac{n}{2}\rho} R_l(e^{\rho}) Y_{l,m}(\omega)$$
+The dilation group acts as translation in $\rho$
+$$U_D(s)\phi(\rho, \omega) = \phi(\rho + s, \omega)$$
+The Fourier transform on $\rho$ is easy to define as we has decomposed the angular part.
+\begin{align*}
+    (\mathcal{F}\psi)(\lambda,\omega) 
+    &= \frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty e^{-i\lambda \rho} \phi(\rho,\omega) d\rho\\
+    &= \sum_{l=0}^\infty \sum_{m}^{\dim(\pi_l)} Y_{l,m}(\omega) \frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty e^{-i\lambda \rho} e^{\frac{n}{2}\rho} R_l(e^{\rho}) d\rho\\
+    &= \sum_{l=0}^\infty \sum_{m}^{\dim(\pi_l)} Y_{l,m}(\omega) \frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty r^{-i\lambda} r^{\frac{n}{2}-1} R_l(r) dr\\
+    &= \sum_{l=0}^\infty \sum_{m}^{\dim(\pi_l)} Y_{l,m}(\omega) (\mathscr{M}_l R_l)(\lambda)\\
+    &= \mathscr{M} \psi(\lambda,\omega)
+\end{align*}
+i.e. the Mellin transform is just the Fourier transform on the dilation group after separating the angular part by rotational symmetry.
+\subsection{Compactness}
+The symmetries underlying scattering theory possess distinct topological characters: the rotation group \(SO(n)\) is \textbf{compact}, whereas the dilation group \(G_D \cong (\mathbb{R},+)\) is \textbf{non-compact}. 
+This difference fundamentally shapes their representation theory and physical role.\\
+Compactness of \(SO(n)\) guarantees that its unitary representation on \(L^2(S^{n-1})\) decomposes discretely into finite-dimensional irreducible subspaces, i.e. the angular momentum channels. 
+For rotationally symmetric potentials, this decomposition remains exact throughout the scattering process, providing the foundation for partial-wave analysis. \\
+In contrast, the non-compact dilation group (which is isomorphic to \((\mathbb{R},+)\)) exhibits a continuous spectrum. 
+The radial Fourier transform i.e. Mellin transform to separate incoming and outgoing states via the spectral parameter \(\lambda\). 
+Thus, compact symmetries furnish persistent quantum numbers under suitable interactions, while non-compact symmetries govern the asymptotic kinematic classification.
+\section{Schrödinger Operator with 3-D Spherically Symmetric Gaussian Potential}
+As an example of all the above theory, we consider the Schrödinger operator with a spherically symmetric Gaussian potential in three-dimensional space.
+$$H_0 = -\frac{\hbar^2}{2m} \nabla^2, V = V_0 e^{-\frac{r^2}{a^2}}$$
+where \(V_0 > 0\) is the potential strength and \(a\) characterizes the potential's spatial extent. 
+Due to 
+$$\|V\|_2^2 = \int_{\mathbb{R}^3} |V(r)|^2 d^3r = (\frac{\pi a^2}{2})^{\frac{3}{2}}V_0^2 < \infty$$
+By the Example 1 in 2.2, the wave operators \(\Omega_\pm\) \textbf{exist} and \(D(\Omega_\pm) = \mathbb{H}\). 
+Consider the Schrödinger equation, it is easy to calculate in 3-D
+$$(-\frac{\hbar^2}{2m} \nabla^2  + V)\psi= V\psi -\frac{\hbar^2}{2m} (\frac{1}{r^2}\frac{\partial}{\partial r}r^2\frac{\partial}{\partial r} + \frac{1}{r^2\sin\theta}\frac{\partial}{\partial\theta} \sin\theta\frac{\partial}{\partial\theta} + \frac{1}{r^2}\frac{\partial^2}{\partial\phi^2})\psi = E \psi$$
+i.e.
+$$(\frac{1}{x^2}\frac{\partial}{\partial x} x^2 \frac{\partial}{\partial x} + 1 - \frac{l(l+1)}{x^2}) R_l(x) = \frac{V}{E} R_l(x)$$
+where $x = \frac{\sqrt{2mE}}{\hbar} r = kr$.
+
+For free Hamiltonian, $V = 0$, the radial equation becomes the spherical Bessel equation, which has two linearly independent solutions
+$$R_l(x) = a j_l(x) + b n_l(x)$$
+In Physics, only \(j_l(x)\) is physical because \(n_l(x)\) diverges at the origin.
+By the consequence in 3.1, the free wave function is
+$$\psi_{free} = \sum_{l=0}^\infty \sum_{m}^{\dim(\pi_l)} A_{lm} Y_{l,m}(\omega) j_l(x)$$
+\subsection{Mellin Transform of the Free State}
+Now we try to divide the incoming and outgoing states by Mellin transform. (Omit the summation symbol and the coefficients)
+\begin{align*}
+    \mathscr{M}\psi_{free}(\lambda,\omega)
+    &= Y_{l,m}(\omega) \mathscr{M}[j_l(x)](\lambda)\\
+    &= Y_{l,m}(\omega) \frac{1}{\sqrt{2\pi}} \int_0^\infty r^{-i\lambda} j_l(x) r^{\frac{1}{2}} dr\\
+\end{align*}
+Refer to the points table and obtain
+$$\int_0^\infty x^{s-1} j_l(x) dx = 2^{s-2} \sqrt{\pi} \frac{\Gamma(\frac{l+s}{2})}{\Gamma(\frac{l-s+3}{2})}$$
+therefore
+$$\mathscr{M}\psi_{free}(\lambda,\omega) = Y_{l,m}(\omega) k^{i\lambda-\frac{3}{2}} 2^{-1-i\lambda}\frac{\Gamma(\frac{l+\frac{3}{2}-i\lambda}{2})}{\Gamma(\frac{l+\frac{3}{2}+i\lambda}{2})}$$
+Obviously, the real wave function has both incoming and outgoing components. 
+\subsection{Projection onto Incoming and Outgoing Parts}
+To separate them, we can use the projection operators
+$$\psi_{free,\pm} = P_\pm \psi_{free} = \mathscr{M}^{-1} \chi_{\lambda \gtrless 0} \mathscr{M} \psi_{free}$$
+where $\chi_{\lambda \gtrless 0}$ is indicator function. By the spectrum of $D$, the incoming and outgoing states are well defined.
+By the unitary of Mellin transform, the inverse Mellin transform is
+$$\mathscr{M}^{-1} f(\lambda,\omega) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty r^{i\lambda} f(\lambda,\omega) r^{-3} d\lambda$$
+Therefore,
+\begin{align}
+    \psi_{free,\pm}(r,\omega) 
+    &= \frac{1}{\sqrt{2\pi}} \int_{0}^{\pm\infty} r^{i\lambda} \mathscr{M}\psi_{free}(\lambda,\omega) r^{-\frac{3}{2}} d\lambda\\
+    &= Y_{l,m}(\omega) \frac{1}{\sqrt{2\pi}} \int_{0}^{\pm\infty} r^{i\lambda-\frac{3}{2}} k^{i\lambda-\frac{3}{2}} 2^{-1-i\lambda}\frac{\Gamma(\frac{l+\frac{3}{2}-i\lambda}{2})}{\Gamma(\frac{l+\frac{3}{2}+i\lambda}{2})} d\lambda\\
+\end{align}
+Introduce the complex variable \(s = i\lambda\). Then \(\lambda = -is\), \(d\lambda = -i\, ds\), and the integration limits transform as:\\
+- For \(\psi_{\text{free},+}\): \(\lambda > 0\) corresponds to \(s = i\lambda\) on the positive imaginary axis.\\
+- For \(\psi_{\text{free},-}\): \(\lambda < 0\) corresponds to \(s = i\lambda\) on the negative imaginary axis.\\
+Therefore, 
+\begin{align}
+    \psi_{\text{free},\pm}(r,\omega) 
+    &= Y_{l,m}(\omega) \frac{-i}{\sqrt{2\pi}} \int_{\mp i\infty}^{0} r^{s-\frac{3}{2}} k^{s-\frac{3}{2}} \, 2^{-1+s} \, \frac{\Gamma\!\left(\frac{l+\frac{3}{2}-s}{2}\right)}{\Gamma\!\left(\frac{l+\frac{3}{2}+s}{2}\right)} ds \nonumber\\
+    &= Y_{l,m}(\omega) \frac{-i}{\sqrt{2\pi}} (rk)^{-\frac{3}{2}} 2^{-1} \int_{\mp i\infty}^{0} \left(\frac{kr}{2}\right)^{s} \frac{\Gamma\!\left(\frac{l+\frac{3}{2}-s}{2}\right)}{\Gamma\!\left(\frac{l+\frac{3}{2}+s}{2}\right)} ds. \label{eq:contour_int}
+\end{align}
+The integrals in \eqref{eq:contour_int} are of the Mellin--Barnes type, and can be identified with the spherical Hankel functions via known integral representations.  
+Recall the Sommerfeld integral representation for the spherical Hankel functions:
+\[
+h_l^{(1)}(z) = \frac{-i}{\sqrt{\pi}} \left(\frac{z}{2}\right)^l \frac{\Gamma(l+1)}{\Gamma(l+\frac{3}{2})} \int_{-i\infty}^{\infty} e^{i z \cosh t} (\sinh t)^{2l+1} \, dt,
+\]
+\[
+h_l^{(2)}(z) = \frac{i}{\sqrt{\pi}} \left(\frac{z}{2}\right)^l \frac{\Gamma(l+1)}{\Gamma(l+\frac{3}{2})} \int_{i\infty}^{-\infty} e^{i z \cosh t} (\sinh t)^{2l+1} \, dt.
+\]
+By a suitable change of variable \(u = e^{t}\) and then applying the Mellin inversion theorem, one obtains the equivalent Mellin--Barnes representations:
+\begin{align}
+h_l^{(1)}(z) &= \frac{-i}{\sqrt{\pi}} \left(\frac{z}{2}\right)^l \frac{\Gamma(l+1)}{\Gamma(l+\frac{3}{2})} 
+\int_{-i\infty}^{0} \left(\frac{z}{2}\right)^{s} 
+\frac{\Gamma\!\left(\frac{l+\frac{3}{2}-s}{2}\right)}{\Gamma\!\left(\frac{l+\frac{3}{2}+s}{2}\right)} \, ds, \label{eq:h1_mellin} \\
+h_l^{(2)}(z) &= \frac{i}{\sqrt{\pi}} \left(\frac{z}{2}\right)^l \frac{\Gamma(l+1)}{\Gamma(l+\frac{3}{2})} 
+\int_{i\infty}^{0} \left(\frac{z}{2}\right)^{s} 
+\frac{\Gamma\!\left(\frac{l+\frac{3}{2}-s}{2}\right)}{\Gamma\!\left(\frac{l+\frac{3}{2}+s}{2}\right)} \, ds. \label{eq:h2_mellin}
+\end{align}
+Comparing \eqref{eq:contour_int} with \eqref{eq:h1_mellin} and \eqref{eq:h2_mellin} and doing rescaling, we see that
+\[
+\psi_{\text{free},+}(r,\omega) = \frac{1}{2} \, Y_{l,m}(\omega) \, h_l^{(1)}(kr), \qquad
+\psi_{\text{free},-}(r,\omega) = \frac{1}{2} \, Y_{l,m}(\omega) \, h_l^{(2)}(kr).
+\]
+Hence the free wave function decomposes as
+\[
+\psi_{\text{free}} = \psi_{\text{free},+} + \psi_{\text{free},-}
+= \frac{1}{2} \, Y_{l,m}(\omega) \bigl[ h_l^{(1)}(kr) + h_l^{(2)}(kr) \bigr].
+\]
+Using the well‑known identity \(j_l(z) = \frac{1}{2}[h_l^{(1)}(z)+h_l^{(2)}(z)]\), we recover the original expansion
+\[
+\psi_{\text{free}} = Y_{l,m}(\omega) \, j_l(kr),
+\]
+which confirms the consistency of the Mellin‑projection procedure.
+\subsection{Physical Interpretation}
+
+The decomposition
+
+\[
+j_l(kr) = \frac{1}{2}\bigl[ h_l^{(1)}(kr) + h_l^{(2)}(kr) \bigr]
+\]
+
+is exactly reproduced. The outgoing part (\(\lambda>0\)) corresponds to \(h_l^{(1)}\), which behaves as \(e^{ikr}/(kr)\) for large \(r\); the incoming part (\(\lambda<0\)) corresponds to \(h_l^{(2)}\), which behaves as \(e^{-ikr}/(kr)\). Thus the Mellin spectral parameter \(\lambda\) cleanly separates the two asymptotic directions, and the projection operators \(P_\pm\) provide a rigorous, operator‑theoretic tool for extracting the incoming and outgoing components of a scattering state.
+
+
+\section{Conclusion}
+Scattering theory provides a rigorous mathematical framework for describing particle interactions in quantum mechanics. 
+This project has explored its foundations within Hilbert space, focusing on the definition and properties of wave operators and the conditions for their existence as established by Cook's lemma. 
+A central result is the application of the Mellin transform, which naturally separates incoming and outgoing asymptotic states by diagonalizing the dilation operator. 
+By employing group-theoretic methods, we derived the Mellin transform from the underlying symmetries rotation and dilation of the free Hamiltonian. 
+This approach not only clarifies the transform's origin but also highlights the distinct roles of compact and non-compact symmetry groups in scattering theory. \\
+As a concrete illustration, we applied the formalism to scattering from a spherically symmetric Gaussian potential, demonstrating how the Mellin transform cleanly decomposes the free wave function into incoming and outgoing spherical Hankel components. 
+This work underscores the power of combining operator theory, harmonic analysis, and group representations to elucidate fundamental aspects of quantum scattering phenomena.
+\begin{thebibliography}{2}
+\bibitem{RS} M. Reed and B. Simon, \emph{Methods of Modern Mathematical Physics, Vol. III: Scattering Theory}, Academic Press, 1979.
+\bibitem{Teschl} G. Teschl, \emph{Mathematical Methods in Quantum Mechanics: With Applications to Schrödinger Operators}, 2nd ed., Amer. Math. Soc., 2014.
+\bibitem{Ma Zhongqi} Ma Zhongqi and Dai Anying, \emph{Group Theory and Its Applications in Physics}, Beijing Institute of Technology Press, 1988.
+\bibitem{Wu Chongshi} Wu Chongshi and Gao Chunyuan, \emph{Methods of Mathematical Physics (3rd Edition)}, Peking University Press, 2019.
+\end{thebibliography}
+
+%\begin{appendices}
+%We provide a step-by-step derivation of the Lippmann--Schwinger equation starting from the Schrödinger equation and the resolvent formalism.
+%\end{appendices}
+
+\end{document}
+
+$$\frac{d}{d\lambda} \psi(\lambda, y(\lambda,x)) = (y\cdot \nabla_y +\frac{n}{2}) \psi(\lambda, y(x, \lambda)) + \frac{\partial y}{\partial \lambda}  \cdot \nabla_y \psi(\lambda, y)$$
+i.e.
+$$\frac{d}{d\lambda} \psi(\lambda, y) - \frac{n}{2} \psi(\lambda, y) = (y +\frac{dy}{d\lambda})\cdot \nabla \psi(\lambda, y)$$
+with the initial condition $\psi(0,x) = \psi(x), y(0,x) = x$.
+A possible solution is
+$$y = e^{-\lambda} x,\ \psi(\lambda, y) = e^{\frac{n}{2}\lambda} \psi(0, e^{-\lambda}x)$$
+Homogeneous Space 
+- \frac{l(l+1)}{r^2} + \frac{l(l+1)}{r^2}
